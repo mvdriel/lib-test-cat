@@ -1,24 +1,25 @@
 <?php
-/**  
+/**
  * This program is free software; you can redistribute it and/or
  * modify it under the terms of the GNU General Public License
  * as published by the Free Software Foundation; under version 2
  * of the License (non-upgradable).
- * 
+ *
  * This program is distributed in the hope that it will be useful,
  * but WITHOUT ANY WARRANTY; without even the implied warranty of
  * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
  * GNU General Public License for more details.
- * 
+ *
  * You should have received a copy of the GNU General Public License
  * along with this program; if not, write to the Free Software
  * Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301, USA.
- * 
+ *
  * Copyright (c) 2017 (original work) Open Assessment Technologies SA
  */
 
 namespace oat\libCat\custom;
 
+use oat\libCat\CatEngine;
 use oat\libCat\CatSection;
 use oat\libCat\AbstractCatSection;
 use function GuzzleHttp\json_decode;
@@ -30,6 +31,19 @@ use function GuzzleHttp\json_decode;
  */
 class EchoAdaptSection extends AbstractCatSection
 {
+    /**
+     * EchoAdaptSection constructor.
+     *
+     * @param CatEngine $engine
+     * @param string $settings
+     * @param string $qtiUsageData
+     * @param string $qtiMetaData
+     */
+    public function __construct(CatEngine $engine, $settings, $qtiUsageData = null, $qtiMetaData = null) {
+        $settings = json_decode($settings, true);
+
+        parent::__construct($engine, $settings, $qtiUsageData, $qtiMetaData);
+    }
 
     /**
      * Note: this is not part of IMS CAT API standard
@@ -39,12 +53,12 @@ class EchoAdaptSection extends AbstractCatSection
     {
         return $this->engine->call('tests/'.$this->getSectionId().'/items');
     }
-    
+
     public function jsonSerialize()
     {
         return $this->settings;
     }
-    
+
     public function getSectionId()
     {
         return $this->settings;
